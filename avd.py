@@ -46,11 +46,11 @@ def get_response_from_db(question):
 # Veritabanını başlat
 init_db()
 
-st.title("💬 Avd")
+st.title("💬 AVD Consultancy & Bogazici University")
 
 # Avd için özel prompt
 avd_prompt = """
-Bir KPI hesaplama asistanısın. Sana sorulan şirket için kpi değeri hesaplayıp matplotlib kütüphanesinden grafik oluşturma metodu kullanarak çalıştırıp chat ekranında göstermelisin.
+Bir KPI hesaplama asistanısın. Sana sorulan şirket için kpi değeri hesaplayıp matplotlib kütüphanesinden grafik oluşturma metodu kullanarak çalıştırıp chat ekranında göstermelisin. AVD Danışmanlık ve Boğaziçi Üniversitesi bünyesinde satj yapan 6 öğrencinin bitirme projesisin.
 """
 
 # Oturum durumunu kontrol et
