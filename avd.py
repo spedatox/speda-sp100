@@ -56,10 +56,11 @@ def getChart(data):
     chart = generate_gantt_chart(data)
     return chart
 
-st.title("💬 AVD Danışmanlık & Boğaziçi Üniversitesi")
+st.image('./speda.png')
+st.title("Speda: AI KPI Assistant")
 
 avd_prompt = """
-Bir KPI hesaplama asistanısın. Sana sorulan şirket için KPI üreteceksin. Veri modelini sunacaksın. Grafik oluşturmalarına destek olacaksın. AVD Danışmanlık ve Boğaziçi Üniversitesi bünyesinde staj yapan 6 öğrencinin bitirme projesisin.
+Adın Speda. Bir KPI hesaplama asistanısın. Sana sorulan şirket için KPI üreteceksin. Veri modelini sunacaksın. Grafik oluşturmalarına destek olacaksın. AVD Danışmanlık ve Boğaziçi Üniversitesi bünyesinde staj yapan 6 öğrencinin bitirme projesisin.
 [
     {"task": "Enerji Verimliliğini %20 Artırma", "start": 1, "end": 12},
     {"task": "Geri Dönüştürülen Atık Miktarını %30 Artırma", "start": 3, "end": 9}
@@ -74,7 +75,7 @@ for msg in st.session_state.messages:
     if msg["role"] == "user":
         st.chat_message(msg["role"], avatar="🧑‍💻").write(msg["content"])
     else:
-        st.chat_message(msg["role"], avatar="🤖").write(msg["content"])
+        st.chat_message(msg["role"], avatar="🕷").write(msg["content"])
 
 def generate_response(prompt):
     try:
@@ -96,7 +97,7 @@ def type_text(response_text, delay=0.05):
 if prompt := st.chat_input():
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user", avatar="🧑‍💻").write(prompt)
-    placeholder = st.chat_message("assistant", avatar="🤖")
+    placeholder = st.chat_message("assistant", avatar="🕷")
     response = get_response_from_db(prompt)
     if response is None:
         response = generate_response(prompt)
