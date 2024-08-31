@@ -1,19 +1,21 @@
+import re
+import json
+import altair as alt
+import pandas as pd
 import streamlit as st
 import sqlite3
 import time
 import os
 import google.generativeai as genai
 
-# Ortam değişkeninden API anahtarını ayarlayın
-os.environ['GEMINI_API_KEY'] = 'AIzaSyA1-uLTtQ4YRhZpDfrC82LMp0S23nT_K34'  # <-- Kendi API anahtarınızı buraya ekleyin
+os.environ['GEMINI_API_KEY'] = 'AIzaSyA1-uLTtQ4YRhZpDfrC82LMp0S23nT_K34'
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
-# Modeli başlat
 generation_config = {
     "temperature": 1,
     "top_p": 0.95,
     "top_k": 64,
-    "max_output_tokens": 8192,
+    "max_output_tokens": 512,
     "response_mime_type": "text/plain",
 }
 
@@ -21,87 +23,116 @@ model = genai.GenerativeModel(
     model_name="gemini-1.5-flash",
     generation_config=generation_config,
 )
-
-# Tek seferlik veritabanı bağlantısı
 conn = sqlite3.connect('chatbot.db')
 c = conn.cursor()
 
-# Veritabanına bağlan ve tabloyu oluştur
 def init_db():
     c.execute('''CREATE TABLE IF NOT EXISTS chat_history
                  (question TEXT PRIMARY KEY, response TEXT)''')
     conn.commit()
 
-# Veritabanına soru-cevap çifti ekle
 def insert_into_db(question, response):
-    c.execute("INSERT OR IGNORE INTO chat_history (question, response) VALUES (?, ?)", (question, response))
+    c.execute("INSERT OR IGNORE INTO chat_history (question, response) VALUES (?, ?)",
+              (question, response))
     conn.commit()
 
-# Veritabanından cevabı getir
 def get_response_from_db(question):
     c.execute("SELECT response FROM chat_history WHERE question = ?", (question,))
     result = c.fetchone()
     return result[0] if result else None
 
-# Veritabanını başlat
 init_db()
 
-st.title("💬 AVD Consultancy & Bogazici University")
+def generate_gantt_chart(data):
+    df = pd.DataFrame(data)
+    chart = alt.Chart(df).mark_bar().encode(
+        x='start',
+        x2='end',
+        y='task'
+    )
+    return chart
 
-# Avd için özel prompt
+def getChart(data):
+    chart = generate_gantt_chart(data)
+    return chart
+
+st.title("💬 AVD Danışmanlık & Boğaziçi Üniversitesi")
+
 avd_prompt = """
-Bir KPI hesaplama asistanısın. Sana sorulan şirket için kpi değeri hesaplayıp matplotlib kütüphanesinden grafik oluşturma metodu kullanarak çalıştırıp chat ekranında göstermelisin. AVD Danışmanlık ve Boğaziçi Üniversitesi bünyesinde satj yapan 6 öğrencinin bitirme projesisin.
+Bir KPI hesaplama asistanısın. Sana sorulan şirket için KPI üreteceksin. Veri modelini sunacaksın. Grafik oluşturmalarına destek olacaksın. AVD Danışmanlık ve Boğaziçi Üniversitesi bünyesinde staj yapan 6 öğrencinin bitirme projesisin.
+[
+    {"task": "Enerji Verimliliğini %20 Artırma", "start": 1, "end": 12},
+    {"task": "Geri Dönüştürülen Atık Miktarını %30 Artırma", "start": 3, "end": 9}
+] Bu örnek veri ile sorulacak soruları ilişkilendir. Gantt chart için veri hazırla. Bulduğun hedefleri yıl icerisinde bölerek start ve end degerlerini yerlestir JSON formatında cevap vermek zorundasın. Kısa Cevap Ver!!!
 """
 
-# Oturum durumunu kontrol et
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "content": "Size nasıl yardımcı olabilirim?"}]
+    st.session_state["messages"] = [
+        {"role": "assistant", "content": "Size nasıl yardımcı olabilirim?"}]
 
-# Önceki mesajları göster
 for msg in st.session_state.messages:
     if msg["role"] == "user":
         st.chat_message(msg["role"], avatar="🧑‍💻").write(msg["content"])
     else:
         st.chat_message(msg["role"], avatar="🤖").write(msg["content"])
 
-# Yanıt oluşturma fonksiyonu
 def generate_response(prompt):
     try:
-        # Metin üretme
         response = model.generate_content([
             avd_prompt,
             f"input: {prompt}",
             "output: | |"
         ])
-        return response.text  # Yanıtın sadece metin kısmını döndür
+        return response.text
     except Exception as e:
         return f'API Hatası: {e}'
 
-# Yanıtı yavaş yavaş yazdırma fonksiyonu
 def type_text(response_text, delay=0.05):
     placeholder = st.empty()
     for i in range(len(response_text) + 1):
         placeholder.write(response_text[:i])
         time.sleep(delay)
 
-# Kullanıcıdan girdi alma ve işleme
 if prompt := st.chat_input():
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user", avatar="🧑‍💻").write(prompt)
-    
-    # "..." ile bekletme etkisi
-    placeholder = st.chat_message("assistant", avatar="🕷")
-    time.sleep(0.5)  # Bekleme süresi
-    
-    # Veritabanından cevabı almayı dene
+    placeholder = st.chat_message("assistant", avatar="🤖")
     response = get_response_from_db(prompt)
-    
-    # Eğer veritabanında cevap yoksa, modeli kullan
     if response is None:
         response = generate_response(prompt)
-        insert_into_db(prompt, response)  # Cevabı veritabanına kaydet
-    
-    # "..." yerine yanıtı yavaş yavaş yazdırma
+        insert_into_db(prompt, response)
     placeholder.empty()
     type_text(response)
-    st.session_state.messages.append({"role": "assistant", "content": response})
+    
+    # JSON verisi kontrolü ve işleme
+    try:
+        # JSON formatında olabilecek kısımları bulmak için regex
+        json_strings = re.findall(r'\[\s*\{(?:[^{}]*|\{[^{}]*\})*\}(?:\s*,\s*\{(?:[^{}]*|\{[^{}]*\})*\})*\s*\]', response)
+        
+        # Her JSON stringini kontrol et
+        for json_str in json_strings:
+            try:
+                data = json.loads(json_str)
+                if isinstance(data, list) and all(isinstance(item, dict) for item in data):
+                    # Geçerli JSON verisi varsa Gantt grafiği oluştur
+                    chart = getChart(data)
+                    st.session_state['chart'] = chart
+                    break
+            except json.JSONDecodeError:
+                continue
+        else:
+            # JSON verisi bulunamazsa veya geçersizse mesajı göster
+            st.session_state.messages.append({"role": "assistant", "content": response})
+    except Exception as e:
+        st.write(f'Bir hata oluştu: {e}')
+
+# Buton ve Gantt chart görünürlüğü
+if 'chart' in st.session_state:
+    if st.button('Göster'):
+        tab1, tab2 = st.tabs(["Streamlit Teması (Varsayılan)", "Altair Yerel Teması"])
+        with tab1:
+            st.altair_chart(st.session_state['chart'], theme="streamlit", use_container_width=True)
+        with tab2:
+            st.altair_chart(st.session_state['chart'], theme=None, use_container_width=True)
+else:
+    st.write("KPI verisi bulunamadı veya JSON formatında hata var.")
