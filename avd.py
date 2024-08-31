@@ -127,12 +127,18 @@ if prompt := st.chat_input():
         st.write(f'Bir hata oluştu: {e}')
 
 # Buton ve Gantt chart görünürlüğü
-if 'chart' in st.session_state:
-    if st.button('Göster'):
+if 'show_chart' not in st.session_state:
+    st.session_state['show_chart'] = False
+
+if st.button('Göster/Gizle'):
+    st.session_state['show_chart'] = not st.session_state['show_chart']
+
+if st.session_state['show_chart']:
+    if 'chart' in st.session_state:
         tab1, tab2 = st.tabs(["Streamlit Teması (Varsayılan)", "Altair Yerel Teması"])
         with tab1:
             st.altair_chart(st.session_state['chart'], theme="streamlit", use_container_width=True)
         with tab2:
             st.altair_chart(st.session_state['chart'], theme=None, use_container_width=True)
-else:
-    st.write("KPI verisi bulunamadı veya JSON formatında hata var.")
+    else:
+        st.write("KPI verisi bulunamadı veya JSON formatında hata var.")
