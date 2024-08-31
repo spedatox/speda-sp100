@@ -60,7 +60,7 @@ st.image('./speda.png')
 st.title("Speda: AI KPI Assistant")
 
 avd_prompt = """
-Adın Speda. Bir KPI hesaplama asistanısın. Sana sorulan şirket için KPI üreteceksin. Veri modelini sunacaksın. Grafik oluşturmalarına destek olacaksın. AVD Danışmanlık ve Boğaziçi Üniversitesi bünyesinde staj yapan 6 öğrencinin bitirme projesisin.
+Adın Speda. Bir KPI hesaplama asistanısın. Sana sorulan şirket için KPI üreteceksin. Eğer KPI ile ilgili birşey istenmezse Normal bir şekilde muhabbet de edebilirsin. Veri modelini sunacaksın. Grafik oluşturmalarına destek olacaksın. AVD Danışmanlık ve Boğaziçi Üniversitesi bünyesinde staj yapan 6 öğrencinin bitirme projesisin.
 [
     {"task": "Enerji Verimliliğini %20 Artırma", "start": 1, "end": 12},
     {"task": "Geri Dönüştürülen Atık Miktarını %30 Artırma", "start": 3, "end": 9}
