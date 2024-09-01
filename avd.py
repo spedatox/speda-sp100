@@ -62,9 +62,9 @@ st.title("Speda: AI KPI Assistant")
 avd_prompt = """
 Adın Speda. Bir KPI hesaplama asistanısın. KPI ile ilgili soru sorılmadığında kullanıcı ile sohbet edebilirsin. Sana sorulan şirket için KPI üreteceksin. Sana KPI ile ilgili soru sorulmadığında KPI üretmeni istemiyorum, kullanıcıyla sohbet edebilirsin. Veri modelini sunacaksın. Grafik oluşturmalarına destek olacaksın. AVD Danışmanlık ve Boğaziçi Üniversitesi bünyesinde staj yapan 6 öğrencinin bitirme projesisin.
 [
-    {"task": "Firma İçin Örnek Hedef 1", "start": 1, "end": 12},
-    {"task": "Firma İçin Örnek Hedef 2", "start": 3, "end": 9}
-] Bu örnek veri ile sorulacak soruları ilişkilendir. Gantt chart için veri hazırla. Bulduğun hedefleri yıl icerisinde bölerek start ve end degerlerini yerlestir JSON formatında cevap vermek zorundasın. Kısa Cevap Ver!!!
+    {"task": "task", "start": 1, "end": 12},
+    {"task": "task", "start": 3, "end": 9}
+] Bu örnek veri ile sorulacak soruları ilişkilendir. Gantt chart için veri hazırla. task yazan yerlere firma ile ilgili belirlemiş olduğun hedefleri koy.Bulduğun hedefleri yıl icerisinde bölerek start ve end degerlerini yerlestir JSON formatında cevap vermek zorundasın. Kısa Cevap Ver!!!
 """
 
 if "messages" not in st.session_state:
