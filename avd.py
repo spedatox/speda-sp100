@@ -23,7 +23,7 @@ model = genai.GenerativeModel(
     model_name="gemini-1.5-flash",
     generation_config=generation_config,
 )
-conn = sqlite3.connect('chatbot.db')
+conn = sqlite3.connect('chatbott.db')
 c = conn.cursor()
 
 def init_db():
