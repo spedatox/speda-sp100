@@ -41,7 +41,6 @@ def get_response_from_db(question):
     result = c.fetchone()
     return result[0] if result else None
 
-init_db()
 
 def generate_gantt_chart(data):
     df = pd.DataFrame(data)
