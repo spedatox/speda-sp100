@@ -1,4 +1,4 @@
-# 🕷 Speda SP-100: AI KPI Assistant
+## 🕷 Speda SP-100: AI KPI Assistant
 
 **Speda SP-100** is an AI-powered KPI assistant developed as the **SP-100 graduation project** by six interns from **Boğaziçi University**, in collaboration with **AVD Danışmanlık**. The application helps organizations generate, structure, and visualize Key Performance Indicators (KPIs) using AI and Gantt charts.
 
@@ -50,4 +50,4 @@ Built with **Streamlit**, **Altair**, and **Google Gemini (1.5 Flash)** for seam
 - **Project Name:** Speda SP-100
 - **Type:** Graduation Project
 - **Institution:** Boğaziçi University (Internship) & AVD Consultancy
-- **Developped By:** Ahmet Erol Bayrak , Muhammed Esat Demir , Ramiz Can Akbıyık, Muhammed Emin Yavuz, Muhammed Gazi Güzel, Gökay Sardoğan
+- **Developped By:** Muhammed Emin Yavuz, Ahmet Erol Bayrak, Muhammed Gazi Güzel, Muhammed Esat Demir , Ramiz Can Akbıyık, Gökay Sardoğan
