@@ -50,4 +50,4 @@ Built with **Streamlit**, **Altair**, and **Google Gemini (1.5 Flash)** for seam
 - **Project Name:** Speda SP-100
 - **Type:** Graduation Project
 - **Institution:** Boğaziçi University (Internship) & AVD Consultancy
-- **Developped By:** Ahmet Erol Bayrak and his teammates.
+- **Developped By:** Ahmet Erol Bayrak , Muhammed Esat Demir , Ramiz Can Akbıyık, Muhammed Emin Yavuz, Muhammed Gazi Güzel, Gökay Sardoğan
