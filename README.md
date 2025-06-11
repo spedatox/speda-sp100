@@ -1,6 +1,6 @@
 ## 🕷 Speda SP-100: AI KPI Assistant
 
-**Speda SP-100** is an AI-powered KPI assistant developed as the ** graduation project** by six interns from **Boğaziçi University**, in collaboration with **AVD Consultancy**. The application helps organizations generate, structure, and visualize Key Performance Indicators (KPIs) using AI and Gantt charts.
+**Speda SP-100** is an AI-powered KPI assistant developed as the **graduation project** by six interns from **Boğaziçi University**, in collaboration with **AVD Consultancy**. The application helps organizations generate, structure, and visualize Key Performance Indicators (KPIs) using AI and Gantt charts.
 
 ---
 
